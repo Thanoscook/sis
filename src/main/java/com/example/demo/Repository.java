@@ -4,8 +4,11 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.NoSuchElementException;
 
 @Component
 public class Repository {
@@ -40,7 +43,7 @@ public class Repository {
     public String getTeamDetails(String name) {
         Gson gson = new Gson();
         try {
-            Team team = teamList.stream().filter(team5 -> team5.getName().equals(name)).findFirst().get();
+            Team team = findTeam(name);
             LOG.info("Found team {}", team);
             return gson.toJson(team);
         } catch (NoSuchElementException e) {
@@ -51,7 +54,7 @@ public class Repository {
 
     public Team getTeam(String name) {
         try {
-            return teamList.stream().filter(team5 -> team5.getName().equals(name)).findFirst().get();
+            return findTeam(name);
         } catch (NoSuchElementException e) {
             return null;
         }
@@ -59,6 +62,10 @@ public class Repository {
 
     public void insertTeam(Team team) {
         teamList.add(team);
+    }
+
+    private Team findTeam(String name){
+        return teamList.stream().filter(team5 -> team5.getName().equals(name)).findFirst().get();
     }
 
 }
